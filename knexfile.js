@@ -14,4 +14,13 @@ module.exports = {
     useNullAsDefault: true,
   },
 
+  production: {
+    client: 'pg',
+    debug: true,
+    connection: process.env.DATABASE_URL + `?ssl=true`,
+    migrations: {
+      directory: './db/migrations'
+    }
+  }
+
 };
