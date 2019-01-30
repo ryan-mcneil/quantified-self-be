@@ -2,6 +2,7 @@ const chai = require('chai');
 const should = chai.should();
 const chaiHttp = require('chai-http');
 const server = require('../server');
+const pry = require('pryjs');
 
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('../knexfile')[environment];
@@ -58,9 +59,9 @@ describe('API Routes', () => {
           response.body.should.be.a('array');
           response.body.length.should.equal(3);
           response.body[0].should.have.property('name');
-          response.body[0].title.should.equal('Steak');
+          response.body[0].name.should.equal('Steak');
           response.body[0].should.have.property('calories');
-          response.body[0].author.should.equal('7');
+          response.body[0].calories.should.equal(7);
           done();
       });
     });
