@@ -11,8 +11,33 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set('port', process.env.PORT || 3000);
 app.locals.title = 'Quantified Self';
 
+app.use(function (request, response, next) {
+  response.header("Access-Control-Allow-Origin",
+    "*");
+  response.header("Access-Control-Allow-Methods",
+    "GET, PUT, POST, DELETE");
+  response.header("Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept");
+  response.header("Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS");
+  next();
+});
+
 app.get('/', (request, response) => {
-  response.send('Hello, Quantified Self');
+  response.send('Hello, Quantified Self')
+  
+  app.use(function (request, response, next) {
+  response.header("Access-Control-Allow-Origin",
+    "*");
+  response.header("Access-Control-Allow-Methods",
+    "GET, PUT, POST, DELETE");
+  response.header("Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept");
+  response.header("Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS");
+  next();
+});
+;
 });
 
 app.listen(app.get('port'), () => {
