@@ -66,4 +66,34 @@ describe('API Routes', () => {
       });
     });
   });
+
+  describe('GET /api/v1/foods/:id', () => {
+    it('should return a specific food', done => {
+      chai.request(server)
+        .get('/api/v1/foods/1')
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.should.be.json;
+          response.body.should.be.a('object');
+          response.body.should.have.property('name');
+          response.body.name.should.equal('Steak');
+          response.body.should.have.property('calories');
+          response.body.calories.should.equal(7);
+          done();
+      });
+    });
+
+    it('should return a 404 if id does not exist', done => {
+      chai.request(server)
+        .get('/api/v1/foods/4')
+        .end((err, response) => {
+          response.should.have.status(404);
+          response.should.be.json;
+          response.body.should.be.a('object');
+          response.body.should.have.property('error');
+          response.body.error.should.equal('Could not find food with id 4');
+          done();
+      });
+    });
+  });
 });
