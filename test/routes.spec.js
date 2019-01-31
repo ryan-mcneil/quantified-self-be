@@ -119,11 +119,27 @@ describe('API Routes', () => {
   describe('DELETE /api/v1/foods/:id', () => {
     it ('should delete a food', done => {
       chai.request(server)
-        .delete('/api/v1/foods2')
+        .delete('/api/v1/foods/2')
         .end((err, response) => {
           response.should.have.status(204);
+          response.body.should.have.property('message');
+          response.body.message.should.equal('Food with id 4 was successfully deleted');
           done();
       });
     });
   });
+
+  describe('DELETE /api/v1/foods/:id', () => {
+    it ('should delete a food', done => {
+      chai.request(server)
+        .delete('/api/v1/foods/4')
+        .end((err, response) => {
+          response.should.have.status(404);
+          response.body.should.have.property('error');
+          response.body.error.should.equal('Could not find food with id 4');
+          done();
+      });
+    });
+  });
+
 });
