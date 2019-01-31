@@ -112,5 +112,20 @@ describe('API Routes', () => {
           done();
         });
     });
+
+    it('should not create a record and return 422 if missing data', done => {
+      chai.request(server)
+        .post('/api/v1/foods')
+        .send({
+          name: 'Chicken Wings',
+        })
+        .end((err, response) => {
+          response.should.have.status(422);
+          response.body.error.should.equal(`Expected format: { name: <String>, calories: <Integer> }. You're missing a "calories" property.`);
+          done();
+        });
+    });
+
+
   });
 });
