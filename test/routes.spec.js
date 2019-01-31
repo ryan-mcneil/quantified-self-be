@@ -11,17 +11,6 @@ const database = require('knex')(configuration);
 chai.use(chaiHttp);
 
 describe('Client Routes', () => {
-  it('should return the homepage with text', done => {
-    chai.request(server)
-    .get('/')
-    .end((err, response) => {
-      response.should.have.status(200);
-      response.should.be.html;
-      response.res.text.should.equal('Hello, Quantified Self');
-      done();
-    });
-  });
-
   it('should return a 404 for a route that does not exist', done => {
     chai.request(server)
     .get('/sad')
@@ -125,7 +114,30 @@ describe('API Routes', () => {
           done();
         });
     });
-
-
   });
+
+  describe('DELETE /api/v1/foods/:id', () => {
+    it ('should delete a food', done => {
+      chai.request(server)
+        .delete('/api/v1/foods/2')
+        .end((err, response) => {
+          response.should.have.status(204);
+          done();
+      });
+    });
+  });
+
+  describe('DELETE /api/v1/foods/:id', () => {
+    it ('should not delete a food if id doesnt exist', done => {
+      chai.request(server)
+        .delete('/api/v1/foods/4')
+        .end((err, response) => {
+          response.should.have.status(404);
+          response.body.should.have.property('error');
+          response.body.error.should.equal('Could not find food with id 4');
+          done();
+      });
+    });
+  });
+
 });
