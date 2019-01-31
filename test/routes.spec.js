@@ -114,7 +114,16 @@ describe('API Routes', () => {
           done();
         });
     });
+  });
 
-
+  describe('DELETE /api/v1/foods/:id', () => {
+    it ('should delete a food', done => {
+      chai.request(server)
+        .delete('/api/v1/foods2')
+        .end((err, response) => {
+          response.should.have.status(204);
+          done();
+      });
+    });
   });
 });
