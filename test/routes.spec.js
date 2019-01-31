@@ -122,15 +122,13 @@ describe('API Routes', () => {
         .delete('/api/v1/foods/2')
         .end((err, response) => {
           response.should.have.status(204);
-          response.body.should.have.property('message');
-          response.body.message.should.equal('Food with id 4 was successfully deleted');
           done();
       });
     });
   });
 
   describe('DELETE /api/v1/foods/:id', () => {
-    it ('should delete a food', done => {
+    it ('should not delete a food if id doesnt exist', done => {
       chai.request(server)
         .delete('/api/v1/foods/4')
         .end((err, response) => {
