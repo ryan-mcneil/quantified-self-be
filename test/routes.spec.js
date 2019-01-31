@@ -96,4 +96,21 @@ describe('API Routes', () => {
       });
     });
   });
+
+  describe('POST /api/v1/foods', () => {
+    it('should create a new food', done => {
+      chai.request(server)
+        .post('/api/v1/foods')
+        .send({
+          name: 'Chicken Wings',
+          calories: '800'
+        })
+        .end((err, response) => {
+          response.should.have.status(201);
+          response.body.should.be.a('object');
+          response.body.should.have.property('id');
+          done();
+        });
+    });
+  });
 });
