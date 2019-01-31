@@ -21,23 +21,6 @@ app.use(function (request, response, next) {
   next();
 });
 
-app.get('/', (request, response) => {
-  response.send('Hello, Quantified Self')
-  
-  app.use(function (request, response, next) {
-  response.header("Access-Control-Allow-Origin",
-    "*");
-  response.header("Access-Control-Allow-Methods",
-    "GET, PUT, POST, DELETE");
-  response.header("Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept");
-  response.header("Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, OPTIONS");
-  next();
-});
-;
-});
-
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
 });
