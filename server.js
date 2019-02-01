@@ -56,7 +56,7 @@ app.get('/api/v1/foods/:id', (request, response) => {
 app.post('/api/v1/foods', (request, response) => {
   const food = request.body;
 
-  for (let requiredParameter of ['name', 'calories']) {
+  for (let requiredParameter of ['name', 'calories', 'active']) {
     if (!food[requiredParameter]) {
       return response
         .status(422)
