@@ -96,7 +96,7 @@ describe('API Routes', () => {
         .post('/api/v1/foods')
         .send({
           name: 'Chicken Wings',
-          calories: '800',
+          calories: 9,
           active: true
         })
         .end((err, response) => {
