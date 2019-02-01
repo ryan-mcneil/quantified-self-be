@@ -51,6 +51,8 @@ describe('API Routes', () => {
           response.body[0].name.should.equal('Steak');
           response.body[0].should.have.property('calories');
           response.body[0].calories.should.equal(7);
+          response.body[0].should.have.property('active');
+          response.body[0].active.should.equal(true);
           done();
       });
     });
@@ -68,6 +70,8 @@ describe('API Routes', () => {
           response.body.name.should.equal('Steak');
           response.body.should.have.property('calories');
           response.body.calories.should.equal(7);
+          response.body.should.have.property('active');
+          response.body.active.should.equal(true);
           done();
       });
     });
@@ -92,7 +96,8 @@ describe('API Routes', () => {
         .post('/api/v1/foods')
         .send({
           name: 'Chicken Wings',
-          calories: '800'
+          calories: '800',
+          active: true
         })
         .end((err, response) => {
           response.should.have.status(201);
