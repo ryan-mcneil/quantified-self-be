@@ -2,7 +2,7 @@
 exports.up = function(knex, Promise) {
   return Promise.all([
     knex.schema.table('foods', (table) => {
-      table.boolean('active');
+      table.boolean('active').defaultTo(true);
     })
   ]);
 };

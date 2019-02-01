@@ -96,8 +96,7 @@ describe('API Routes', () => {
         .post('/api/v1/foods')
         .send({
           name: 'Chicken Wings',
-          calories: 9,
-          active: true
+          calories: 9
         })
         .end((err, response) => {
           response.should.have.status(201);
