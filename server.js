@@ -60,13 +60,12 @@ app.post('/api/v1/foods', (request, response) => {
       return response
         .status(422)
         .send({ error: `Expected format: { name: <String>, calories: <Integer> }. You're missing a "${requiredParameter}" property.` });
-
     }
   }
 
   database('foods').insert(food, 'id')
     .then(food => {
-      response.status(201).json({ id: food[0]})
+      response.status(201).json({ id: food[0]});
     })
     .catch(error => {
       response.status(500).json({ error });
