@@ -120,6 +120,23 @@ describe('API Routes', () => {
     });
   });
 
+  describe('PATCH /api/v1/foods/:id', () => {
+    it ('should update a food', done => {
+      chai.request(server)
+        .put('/api/v1/foods/1')
+        .send({
+          name: 'Pasta',
+          calories: 100;
+        })
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('object');
+          response.body.name.should.equal('Pasta');
+          response.body.calories.should.equal(100);
+        })
+    })
+  })
+
   describe('DELETE /api/v1/foods/:id', () => {
     it ('should delete a food', done => {
       chai.request(server)
