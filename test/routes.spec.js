@@ -51,6 +51,8 @@ describe('API Routes', () => {
           response.body[0].name.should.equal('Steak');
           response.body[0].should.have.property('calories');
           response.body[0].calories.should.equal(7);
+          response.body[0].should.have.property('active');
+          response.body[0].active.should.equal(true);
           done();
       });
     });
@@ -68,6 +70,8 @@ describe('API Routes', () => {
           response.body.name.should.equal('Steak');
           response.body.should.have.property('calories');
           response.body.calories.should.equal(7);
+          response.body.should.have.property('active');
+          response.body.active.should.equal(true);
           done();
       });
     });
@@ -90,14 +94,16 @@ describe('API Routes', () => {
     it('should create a new food', done => {
       chai.request(server)
         .post('/api/v1/foods')
-        .send({
+        .send({ 'food': {
           name: 'Chicken Wings',
-          calories: '800'
-        })
+          calories: 9
+        } })
         .end((err, response) => {
           response.should.have.status(201);
           response.body.should.be.a('object');
           response.body.should.have.property('id');
+          response.body.name.should.equal('Chicken Wings')
+          response.body.calories.should.equal(9);
           done();
         });
     });
@@ -105,9 +111,9 @@ describe('API Routes', () => {
     it('should not create a record and return 422 if missing data', done => {
       chai.request(server)
         .post('/api/v1/foods')
-        .send({
-          name: 'Chicken Wings',
-        })
+        .send({ 'food': {
+          name: 'Chicken Wings'
+        } })
         .end((err, response) => {
           response.should.have.status(422);
           response.body.error.should.equal(`Expected format: { name: <String>, calories: <Integer> }. You're missing a "calories" property.`);
@@ -115,6 +121,38 @@ describe('API Routes', () => {
         });
     });
   });
+
+  describe('PATCH /api/v1/foods/:id', () => {
+    it ('should update a food', done => {
+      chai.request(server)
+        .put('/api/v1/foods/1')
+        .send({ 'food': {
+          name: 'Pasta',
+          calories: 100
+        } })
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('object');
+          response.body.id.should.equal(1);
+          response.body.name.should.equal('Pasta');
+          response.body.calories.should.equal(100);
+          done();
+        })
+    })
+
+    it ('should not update a record and return 422 if missing data', done => {
+      chai.request(server)
+      .put('/api/v1/foods/1')
+      .send({ 'food': {
+        name: 'Pasta'
+      } })
+      .end((err, response) => {
+        response.should.have.status(422);
+        response.body.error.should.equal(`Expected format: { name: <String>, calories: <Integer> }. You're missing a "calories" property.`);
+        done();
+      })
+    })
+  })
 
   describe('DELETE /api/v1/foods/:id', () => {
     it ('should delete a food', done => {
