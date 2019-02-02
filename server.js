@@ -5,7 +5,6 @@ const bodyParser = require('body-parser');
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
-const pry = require('pryjs');
 
 
 app.use(bodyParser.json());
@@ -54,19 +53,22 @@ app.get('/api/v1/foods/:id', (request, response) => {
 });
 
 app.post('/api/v1/foods', (request, response) => {
-  const food = request.body;
+  const food_data = request.body.food;
 
   for (let requiredParameter of ['name', 'calories']) {
-    if (!food[requiredParameter]) {
+    if (!food_data[requiredParameter]) {
       return response
         .status(422)
         .send({ error: `Expected format: { name: <String>, calories: <Integer> }. You're missing a "${requiredParameter}" property.` });
     }
   }
 
-  database('foods').insert(food, 'id')
+  database('foods').insert(food_data, 'id')
     .then(food_id => {
-      response.status(201).json({ id: food_id[0]});
+      database('foods').where({id: food_id[0]}).select()
+        .then(food => {
+          response.status(201).json(food[0]);
+        })
     })
     .catch(error => {
       response.status(500).json({ error });
@@ -74,7 +76,7 @@ app.post('/api/v1/foods', (request, response) => {
 })
 
 app.put('/api/v1/foods/:id', (request, response) => {
-  const food_data = request.body;
+  const food_data = request.body.food;
   const id = request.params.id;
 
   for (let requiredParameter of ['name', 'calories']) {
@@ -85,9 +87,9 @@ app.put('/api/v1/foods/:id', (request, response) => {
     }
   }
 
-  database('foods').where({ id: id}).update(food_data)
+  database('foods').where({id: id}).update(food_data)
     .then(food_id => {
-      database('foods').where('id', food_id).select()
+      database('foods').where({id: food_id}).select()
         .then(food => {
           response.status(200).json(food[0]);
         })
