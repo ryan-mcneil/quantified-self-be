@@ -4,7 +4,7 @@ exports.up = function(knex, Promise) {
       table.increments('id').primary();
       table.string('name');
       table.date('date');
-      table.integer('calorieGoal');
+      table.integer('calorie_goal');
 
       table.timestamps(true, true);
     })
