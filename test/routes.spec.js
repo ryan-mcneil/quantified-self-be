@@ -126,13 +126,15 @@ describe('API Routes', () => {
         .put('/api/v1/foods/1')
         .send({
           name: 'Pasta',
-          calories: 100;
+          calories: 100
         })
         .end((err, response) => {
           response.should.have.status(200);
           response.body.should.be.a('object');
+          response.body.id.should.equal(1);
           response.body.name.should.equal('Pasta');
           response.body.calories.should.equal(100);
+          done();
         })
     })
   })
