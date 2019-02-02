@@ -94,7 +94,7 @@ describe('API Routes', () => {
     it('should create a new food', done => {
       chai.request(server)
         .post('/api/v1/foods')
-        .send({ 'food': {
+        .send({ food: {
           name: 'Chicken Wings',
           calories: 9
         } })
@@ -111,7 +111,7 @@ describe('API Routes', () => {
     it('should not create a record and return 422 if missing data', done => {
       chai.request(server)
         .post('/api/v1/foods')
-        .send({ 'food': {
+        .send({ food: {
           name: 'Chicken Wings'
         } })
         .end((err, response) => {
@@ -126,7 +126,7 @@ describe('API Routes', () => {
     it ('should update a food', done => {
       chai.request(server)
         .put('/api/v1/foods/1')
-        .send({ 'food': {
+        .send({ food: {
           name: 'Pasta',
           calories: 100
         } })
@@ -143,7 +143,7 @@ describe('API Routes', () => {
     it ('should not update a record and return 422 if missing data', done => {
       chai.request(server)
       .put('/api/v1/foods/1')
-      .send({ 'food': {
+      .send({ food: {
         name: 'Pasta'
       } })
       .end((err, response) => {
