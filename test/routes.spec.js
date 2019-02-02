@@ -94,14 +94,16 @@ describe('API Routes', () => {
     it('should create a new food', done => {
       chai.request(server)
         .post('/api/v1/foods')
-        .send({
+        .send({ 'food': {
           name: 'Chicken Wings',
           calories: 9
-        })
+        } })
         .end((err, response) => {
           response.should.have.status(201);
           response.body.should.be.a('object');
           response.body.should.have.property('id');
+          response.body.name.should.equal('Chicken Wings')
+          response.body.calories.should.equal(9);
           done();
         });
     });
@@ -109,9 +111,9 @@ describe('API Routes', () => {
     it('should not create a record and return 422 if missing data', done => {
       chai.request(server)
         .post('/api/v1/foods')
-        .send({
-          name: 'Chicken Wings',
-        })
+        .send({ 'food': {
+          name: 'Chicken Wings'
+        } })
         .end((err, response) => {
           response.should.have.status(422);
           response.body.error.should.equal(`Expected format: { name: <String>, calories: <Integer> }. You're missing a "calories" property.`);
@@ -124,10 +126,10 @@ describe('API Routes', () => {
     it ('should update a food', done => {
       chai.request(server)
         .put('/api/v1/foods/1')
-        .send({
+        .send({ 'food': {
           name: 'Pasta',
           calories: 100
-        })
+        } })
         .end((err, response) => {
           response.should.have.status(200);
           response.body.should.be.a('object');
@@ -137,20 +139,18 @@ describe('API Routes', () => {
           done();
         })
     })
-  })
 
-  describe('PATCH /api/v1/foods/:id', () => {
     it ('should not update a record and return 422 if missing data', done => {
       chai.request(server)
-        .put('/api/v1/foods/1')
-        .send({
-          name: 'Pasta'
-        })
-        .end((err, response) => {
-          response.should.have.status(422);
-          response.body.error.should.equal(`Expected format: { name: <String>, calories: <Integer> }. You're missing a "calories" property.`);
-          done();
-        })
+      .put('/api/v1/foods/1')
+      .send({ 'food': {
+        name: 'Pasta'
+      } })
+      .end((err, response) => {
+        response.should.have.status(422);
+        response.body.error.should.equal(`Expected format: { name: <String>, calories: <Integer> }. You're missing a "calories" property.`);
+        done();
+      })
     })
   })
 
