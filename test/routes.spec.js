@@ -139,6 +139,21 @@ describe('API Routes', () => {
     })
   })
 
+  describe('PATCH /api/v1/foods/:id', () => {
+    it ('should not update a record and return 422 if missing data', done => {
+      chai.request(server)
+        .put('/api/v1/foods/1')
+        .send({
+          name: 'Pasta'
+        })
+        .end((err, response) => {
+          response.should.have.status(422);
+          response.body.error.should.equal(`Expected format: { name: <String>, calories: <Integer> }. You're missing a "calories" property.`);
+          done();
+        })
+    })
+  })
+
   describe('DELETE /api/v1/foods/:id', () => {
     it ('should delete a food', done => {
       chai.request(server)
