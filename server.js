@@ -18,7 +18,7 @@ app.use(function (request, response, next) {
   response.header("Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept");
   response.header("Access-Control-Allow-Methods",
-    "GET, POST, PATCH, DELETE, OPTIONS");
+    "GET, POST, PUT, DELETE, OPTIONS");
   next();
 });
 
@@ -59,7 +59,7 @@ app.post('/api/v1/foods', (request, response) => {
     if (!food_data[requiredParameter]) {
       return response
         .status(422)
-        .send({ error: `Expected format: { name: <String>, calories: <Integer> }. You're missing a "${requiredParameter}" property.` });
+        .send({ error: `Expected format: { food: { name: <String>, calories: <Integer> }. You're missing a "${requiredParameter}" property.` });
     }
   }
 
@@ -83,7 +83,7 @@ app.put('/api/v1/foods/:id', (request, response) => {
     if (!food_data[requiredParameter]) {
       return response
         .status(422)
-        .send({ error: `Expected format: { name: <String>, calories: <Integer> }. You're missing a "${requiredParameter}" property.` });
+        .send({ error: `Expected format: { food: { name: <String>, calories: <Integer> }. You're missing a "${requiredParameter}" property.` });
     }
   }
 
