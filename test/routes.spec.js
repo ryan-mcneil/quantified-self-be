@@ -95,8 +95,8 @@ describe('API Routes', () => {
       chai.request(server)
         .post('/api/v1/foods')
         .send({
-          name: 'Chicken Wings',
-          calories: 9
+          "name": "Chicken Wings",
+          "calories": 9
         })
         .end((err, response) => {
           response.should.have.status(201);
