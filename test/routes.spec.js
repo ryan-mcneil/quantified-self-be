@@ -116,7 +116,7 @@ describe('API Routes', () => {
         } })
         .end((err, response) => {
           response.should.have.status(422);
-          response.body.error.should.equal(`Expected format: { name: <String>, calories: <Integer> }. You're missing a "calories" property.`);
+          response.body.error.should.equal(`Expected format: { food: { name: <String>, calories: <Integer> } }. You're missing a "calories" property.`);
           done();
         });
     });
@@ -148,7 +148,7 @@ describe('API Routes', () => {
       } })
       .end((err, response) => {
         response.should.have.status(422);
-        response.body.error.should.equal(`Expected format: { name: <String>, calories: <Integer> }. You're missing a "calories" property.`);
+        response.body.error.should.equal(`Expected format: { food: { name: <String>, calories: <Integer> } }. You're missing a "calories" property.`);
         done();
       })
     })
@@ -175,5 +175,28 @@ describe('API Routes', () => {
       });
     });
   });
+
+  describe('GET /api/v1/meals', () => {
+    it ('should get a meal', done => {
+      chai.request(server)
+      .get('/api/v1/meals')
+      .end((err, response) => {
+        response.should.have.status(200);
+        response.should.be.json;
+        response.body.should.be.a('array');
+        response.body.length.should.equal(3);
+        response.body[0].should.have.property('name');
+        response.body[0].name.should.equal('Breakfast');
+        response.body[0].should.have.property('date');
+        response.body[0].date.should.equal('2/1/19');
+        response.body[0].should.have.property('calorie_goal');
+        response.body[0].calorie_goal.should.equal(500);
+        response.body[0].foods.should.be.a('array');
+        response.body[0].foods.length.should.equal(2);
+        response.body[0].foods[0].should.be.a('food');
+
+      })
+    })
+  })
 
 });
