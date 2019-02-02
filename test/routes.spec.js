@@ -163,17 +163,15 @@ describe('API Routes', () => {
           done();
       });
     });
-  });
 
-  describe('DELETE /api/v1/foods/:id', () => {
     it ('should not delete a food if id doesnt exist', done => {
       chai.request(server)
-        .delete('/api/v1/foods/4')
-        .end((err, response) => {
-          response.should.have.status(404);
-          response.body.should.have.property('error');
-          response.body.error.should.equal('Could not find food with id 4');
-          done();
+      .delete('/api/v1/foods/4')
+      .end((err, response) => {
+        response.should.have.status(404);
+        response.body.should.have.property('error');
+        response.body.error.should.equal('Could not find food with id 4');
+        done();
       });
     });
   });

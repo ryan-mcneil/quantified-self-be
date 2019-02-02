@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
+const pry = require('pryjs');
 
 
 app.use(bodyParser.json());
@@ -54,12 +55,11 @@ app.get('/api/v1/foods/:id', (request, response) => {
 
 app.post('/api/v1/foods', (request, response) => {
   const food_data = request.body.food;
-
   for (let requiredParameter of ['name', 'calories']) {
     if (!food_data[requiredParameter]) {
       return response
         .status(422)
-        .send({ error: `Expected format: { name: <String>, calories: <Integer> }. You're missing a "${requiredParameter}" property.` });
+        .send({ error: `Expected format: { food: { name: <String>, calories: <Integer> } }. You're missing a "${requiredParameter}" property.` });
     }
   }
 
@@ -83,7 +83,7 @@ app.put('/api/v1/foods/:id', (request, response) => {
     if (!food_data[requiredParameter]) {
       return response
         .status(422)
-        .send({ error: `Expected format: { name: <String>, calories: <Integer> }. You're missing a "${requiredParameter}" property.` });
+        .send({ error: `Expected format: { food: { name: <String>, calories: <Integer> } }. You're missing a "${requiredParameter}" property.` });
     }
   }
 
