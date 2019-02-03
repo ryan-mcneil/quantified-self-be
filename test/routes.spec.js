@@ -46,11 +46,11 @@ describe('API Routes', () => {
           response.should.have.status(200);
           response.should.be.json;
           response.body.should.be.a('array');
-          response.body.length.should.equal(3);
+          response.body.length.should.equal(12);
           response.body[0].should.have.property('name');
           response.body[0].name.should.equal('Steak');
           response.body[0].should.have.property('calories');
-          response.body[0].calories.should.equal(7);
+          response.body[0].calories.should.equal(500);
           response.body[0].should.have.property('active');
           response.body[0].active.should.equal(true);
           done();
@@ -69,7 +69,7 @@ describe('API Routes', () => {
           response.body.should.have.property('name');
           response.body.name.should.equal('Steak');
           response.body.should.have.property('calories');
-          response.body.calories.should.equal(7);
+          response.body.calories.should.equal(500);
           response.body.should.have.property('active');
           response.body.active.should.equal(true);
           done();
@@ -78,13 +78,13 @@ describe('API Routes', () => {
 
     it('should return a 404 if id does not exist', done => {
       chai.request(server)
-        .get('/api/v1/foods/4')
+        .get('/api/v1/foods/1000')
         .end((err, response) => {
           response.should.have.status(404);
           response.should.be.json;
           response.body.should.be.a('object');
           response.body.should.have.property('error');
-          response.body.error.should.equal('Could not find food with id 4');
+          response.body.error.should.equal('Could not find food with id 1000');
           done();
       });
     });
@@ -166,11 +166,11 @@ describe('API Routes', () => {
 
     it ('should not delete a food if id doesnt exist', done => {
       chai.request(server)
-      .delete('/api/v1/foods/4')
+      .delete('/api/v1/foods/1000')
       .end((err, response) => {
         response.should.have.status(404);
         response.body.should.have.property('error');
-        response.body.error.should.equal('Could not find food with id 4');
+        response.body.error.should.equal('Could not find food with id 1000');
         done();
       });
     });
@@ -184,16 +184,23 @@ describe('API Routes', () => {
         response.should.have.status(200);
         response.should.be.json;
         response.body.should.be.a('array');
-        response.body.length.should.equal(3);
+        response.body.length.should.equal(8);
         response.body[0].should.have.property('name');
         response.body[0].name.should.equal('Breakfast');
         response.body[0].should.have.property('date');
         response.body[0].date.should.equal('2/1/19');
         response.body[0].should.have.property('calorie_goal');
-        response.body[0].calorie_goal.should.equal(500);
+        response.body[0].calorie_goal.should.equal(400);
         response.body[0].foods.should.be.a('array');
-        response.body[0].foods.length.should.equal(2);
+        response.body[0].foods.length.should.equal(1);
         response.body[0].foods[0].should.be.a('food');
+
+        response.body[1].name.should.equal('Lunch');
+        response.body[1].date.should.equal('2/1/19');
+        response.body[1].calorie_goal.should.equal(700);
+        response.body[1].foods.should.be.a('array');
+        response.body[1].foods.length.should.equal(2);
+        response.body[1].foods[0].should.be.a('food');
 
       })
     })
