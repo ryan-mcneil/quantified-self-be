@@ -116,7 +116,7 @@ describe('API Routes', () => {
         } })
         .end((err, response) => {
           response.should.have.status(422);
-          response.body.error.should.equal(`Expected format: { name: <String>, calories: <Integer> }. You're missing a "calories" property.`);
+          response.body.error.should.equal(`Expected format: { food: { name: <String>, calories: <Integer> } }. You're missing a "calories" property.`);
           done();
         });
     });
@@ -148,7 +148,7 @@ describe('API Routes', () => {
       } })
       .end((err, response) => {
         response.should.have.status(422);
-        response.body.error.should.equal(`Expected format: { name: <String>, calories: <Integer> }. You're missing a "calories" property.`);
+        response.body.error.should.equal(`Expected format: { food: { name: <String>, calories: <Integer> } }. You're missing a "calories" property.`);
         done();
       })
     })
