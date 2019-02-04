@@ -177,10 +177,11 @@ describe('API Routes', () => {
   });
 
   describe('GET /api/v1/meals', () => {
-    it ('should get a meal', done => {
+    it ('should get all meals', done => {
       chai.request(server)
       .get('/api/v1/meals')
       .end((err, response) => {
+
         response.should.have.status(200);
         response.should.be.json;
         response.body.should.be.a('array');
@@ -188,20 +189,23 @@ describe('API Routes', () => {
         response.body[0].should.have.property('name');
         response.body[0].name.should.equal('Breakfast');
         response.body[0].should.have.property('date');
-        response.body[0].date.should.equal('2/1/19');
+        response.body[0].date.should.equal('2019-02-01T07:00:00.000Z');
         response.body[0].should.have.property('calorie_goal');
         response.body[0].calorie_goal.should.equal(400);
         response.body[0].foods.should.be.a('array');
         response.body[0].foods.length.should.equal(1);
-        response.body[0].foods[0].should.be.a('food');
+        response.body[0].foods[0].should.be.a('object');
+        response.body[0].foods[0].should.have.property('id');
+        response.body[0].foods[0].should.have.property('name');
+        response.body[0].foods[0].should.have.property('calories');
 
         response.body[1].name.should.equal('Lunch');
-        response.body[1].date.should.equal('2/1/19');
+        response.body[1].date.should.equal('2019-02-01T07:00:00.000Z');
         response.body[1].calorie_goal.should.equal(700);
         response.body[1].foods.should.be.a('array');
         response.body[1].foods.length.should.equal(2);
-        response.body[1].foods[0].should.be.a('food');
-
+        response.body[1].foods[0].should.be.a('object');
+        done();
       })
     })
   })
