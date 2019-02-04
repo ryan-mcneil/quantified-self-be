@@ -250,4 +250,41 @@ describe('API Routes', () => {
     });
   })
 
+  describe('POST /api/v1/meals', () => {
+    it('should create a new Meal', done => {
+      chai.request(server)
+      .post('/api/v1/meals')
+      .send({
+        name: 'Breakfast',
+        date: '2/1/19'
+      })
+      .end((err, response) => {
+        response.should.have.status(201);
+        response.body.should.be.a('object');
+        response.body.should.have.property('id');
+        response.body.name.should.equal('Breakfast')
+        response.body.date.should.equal('2019-02-01T07:00:00.000Z');
+        response.body.calorie_goal.should.equal('400');
+        done();
+      })
+    })
+
+    it('should not create a record and return 422 if missing data', done => {
+      chai.request(server)
+      .post('/api/v1/meals')
+      .send({
+        name: 'Breakfast'
+      })
+      .end((err, response) => {
+        response.should.have.status(422);
+        response.body.error.should.equal(`Expected format: { name: <String>, date: <Date> }. You're missing a "date" property.`);
+        done();
+      })
+    })
+  })
+
+  // describe('POST /api/v1/meals/:meal_id/foods/:food_id', () => {
+  //   it('should add a food to a meal')
+  // })
+
 });
