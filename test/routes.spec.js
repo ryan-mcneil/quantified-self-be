@@ -232,10 +232,22 @@ describe('API Routes', () => {
         response.body.foods[0].name.should.equal('Yogurt');
         response.body.foods[0].should.have.property('calories');
         response.body.foods[0].calories.should.equal(50);
-
-
       })
     })
+
+    it('should return a 404 if id does not exist', done => {
+      chai.request(server)
+        .get('/api/v1/meals/1000/foods')
+        .end((err, response) => {
+          response.should.have.status(404);
+          response.should.be.json;
+          response.body.should.be.a('object');
+          response.body.should.have.property('error');
+          response.body.error.should.equal('Could not find meal with meal_id 1000');
+          done();
+      });
+    });
+
   })
 
 });
