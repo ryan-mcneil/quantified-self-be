@@ -2,11 +2,11 @@ const chai = require('chai');
 const should = chai.should();
 const chaiHttp = require('chai-http');
 const server = require('../server');
-// const pry = require('pryjs');
 
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
+// const pry = require('pryjs');
 
 chai.use(chaiHttp);
 
@@ -208,6 +208,46 @@ describe('API Routes', () => {
         done();
       })
     })
+  })
+
+  describe('GET /api/v1/meals/:meal_id/foods', () => {
+    it ('should get foods for a specific meal', done => {
+      chai.request(server)
+      .get('/api/v1/meals/2/foods')
+      .end((err,response) => {
+        response.should.have.status(200);
+        response.should.be.json;
+        response.body.should.be.a('object');
+        response.body.should.have.property('name');
+        response.body.name.should.equal('Lunch');
+        response.body.should.have.property('date');
+        response.body.date.should.equal('2019-02-01T07:00:00.000Z');
+        response.body.should.have.property('calorie_goal');
+        response.body.calorie_goal.should.equal(700);
+        response.body.foods.should.be.a('array');
+        response.body.foods.length.should.equal(2);
+        response.body.foods[0].should.be.a('object');
+        response.body.foods[0].should.have.property('id');
+        response.body.foods[0].should.have.property('name');
+        response.body.foods[0].name.should.equal('Yogurt');
+        response.body.foods[0].should.have.property('calories');
+        response.body.foods[0].calories.should.equal(50);
+        done();
+      })
+    })
+
+    it('should return a 404 if id does not exist', done => {
+      chai.request(server)
+        .get('/api/v1/meals/1000/foods')
+        .end((err, response) => {
+          response.should.have.status(404);
+          response.should.be.json;
+          response.body.should.be.a('object');
+          response.body.should.have.property('error');
+          response.body.error.should.equal('Could not find meal with meal_id 1000');
+          done();
+      });
+    });
   })
 
 });
