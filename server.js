@@ -127,7 +127,14 @@ app.get('/api/v1/meals', (request, response) => {
     .then((meals_data) => {
       let meals = [];
       meals_data.forEach( data => {
-        if ( meals.every( meal =>  meal.id != data.meal_id ) ) {
+        if ( meals.find( meal => meal.id == data.meal_id)) {
+          let existing_meal = meals.find( meal => meal.id == data.meal_id);
+          existing_meal.foods.push({
+            id: data.food_id,
+            name: data.food_name,
+            calories: data.food_calories
+          })
+        } else {
           meals.push({
             id: data.meal_id,
             name: data.meal_name,
@@ -138,13 +145,6 @@ app.get('/api/v1/meals', (request, response) => {
               name: data.food_name,
               calories: data.food_calories
             }]
-          })
-        } else {
-          let existing_meal = meals.find( meal => meal.id == data.meal_id);
-          existing_meal.foods.push({
-            id: data.food_id,
-            name: data.food_name,
-            calories: data.food_calories
           })
         }
       })
