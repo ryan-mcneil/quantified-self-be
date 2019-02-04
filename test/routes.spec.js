@@ -2,7 +2,7 @@ const chai = require('chai');
 const should = chai.should();
 const chaiHttp = require('chai-http');
 const server = require('../server');
-const pry = require('pryjs');
+// const pry = require('pryjs');
 
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('../knexfile')[environment];
