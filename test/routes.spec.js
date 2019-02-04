@@ -210,4 +210,32 @@ describe('API Routes', () => {
     })
   })
 
+  describe('GET /api/v1/meals/:meal_id/foods', () => {
+    it ('should get foods for a specific meal', done => {
+      chai.request(server)
+      .get('/api/v1/meals/:meal_id/2')
+      .end((err,response) => {
+        response.body.should.have.status(200);
+        response.body.should.be.json();
+        response.body.should.be.a('object');
+        response.body.should.have.property('name');
+        response.body.name.should.equal('Lunch');
+        response.body.should.have.property('date');
+        response.body.date.should.equal('2019-02-01T07:00:00.000Z');
+        response.body.should.have.property('calorie_goal');
+        response.body.calorie_goal.should.equal(700);
+        response.body.foods.should.be.a('array');
+        response.body.foods.length.should.equal(2);
+        response.body.foods[0].should.be.a('object');
+        response.body.foods[0].should.have.property('id');
+        response.body.foods[0].should.have.property('name');
+        response.body.foods[0].name.should.equal('Yogurt');
+        response.body.foods[0].should.have.property('calories');
+        response.body.foods[0].calories.should.equal(50);
+
+
+      })
+    })
+  })
+
 });
