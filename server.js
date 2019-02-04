@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
-// const pry = require('pryjs');
+const pry = require('pryjs');
 
 
 app.use(bodyParser.json());
@@ -154,5 +154,48 @@ app.get('/api/v1/meals', (request, response) => {
       response.status(500).json({ error });
     });
 });
+
+app.get('/api/v1/meals/:meal_id/foods', (request, response) => {
+  database('meals')
+  .join('meal_foods', 'meal_foods.meal_id', '=', 'meals.id')
+  .join('foods', 'meal_foods.food_id', '=', 'foods.id')
+  .where('meal_foods.meal_id', request.params.meal_id)
+  .select( 'meals.id AS meal_id', 'meals.name AS meal_name', 'meals.date AS meal_date', 'meals.calorie_goal AS meal_goal', 'foods.id AS food_id', 'foods.name AS food_name', 'foods.calories AS food_calories')
+    .then((meal_data) => {
+      if(meal_data.length) {
+        let meals = [];
+        meal_data.forEach( data => {
+          if ( meals.find( meal => meal.id == data.meal_id)) {
+            let existing_meal = meals.find( meal => meal.id == data.meal_id);
+            existing_meal.foods.push({
+              id: data.food_id,
+              name: data.food_name,
+              calories: data.food_calories
+            })
+          } else {
+            meals.push({
+              id: data.meal_id,
+              name: data.meal_name,
+              date: data.meal_date,
+              calorie_goal: data.meal_goal,
+              foods: [{
+                id: data.food_id,
+                name: data.food_name,
+                calories: data.food_calories
+              }]
+            })
+          }
+        })
+        response.status(200).json(meals[0]);
+      } else {
+        response.status(404).json({
+          error: `Could not find meal with meal_id ${request.params.meal_id}`
+        });
+      }
+    })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
+})
 
 module.exports = app
