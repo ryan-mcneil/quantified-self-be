@@ -189,7 +189,7 @@ describe('API Routes', () => {
         response.body[0].should.have.property('name');
         response.body[0].name.should.equal('Breakfast');
         response.body[0].should.have.property('date');
-        response.body[0].date.should.equal('2019-02-01T07:00:00.000Z');
+        response.body[0].date.substring(0, 10).should.equal('2019-02-01');
         response.body[0].should.have.property('calorie_goal');
         response.body[0].calorie_goal.should.equal(400);
         response.body[0].foods.should.be.a('array');
@@ -200,7 +200,7 @@ describe('API Routes', () => {
         response.body[0].foods[0].should.have.property('calories');
 
         response.body[1].name.should.equal('Lunch');
-        response.body[1].date.should.equal('2019-02-01T07:00:00.000Z');
+        response.body[1].date.substring(0, 10).should.equal('2019-02-01');
         response.body[1].calorie_goal.should.equal(700);
         response.body[1].foods.should.be.a('array');
         response.body[1].foods.length.should.equal(2);
@@ -221,7 +221,7 @@ describe('API Routes', () => {
         response.body.should.have.property('name');
         response.body.name.should.equal('Lunch');
         response.body.should.have.property('date');
-        response.body.date.should.equal('2019-02-01T07:00:00.000Z');
+        response.body.date.substring(0, 10).should.equal('2019-02-01');
         response.body.should.have.property('calorie_goal');
         response.body.calorie_goal.should.equal(700);
         response.body.foods.should.be.a('array');
@@ -249,5 +249,42 @@ describe('API Routes', () => {
       });
     });
   })
+
+  describe('POST /api/v1/meals', () => {
+    it('should create a new Meal', done => {
+      chai.request(server)
+      .post('/api/v1/meals')
+      .send({ meal: {
+        name: 'Breakfast',
+        date: '2/3/19'
+      } })
+      .end((err, response) => {
+        response.should.have.status(201);
+        response.body.should.be.a('object');
+        response.body.should.have.property('id');
+        response.body.name.should.equal('Breakfast')
+        response.body.date.substring(0, 10).should.equal('2019-02-03');
+        response.body.calorie_goal.should.equal(400);
+        done();
+      })
+    })
+
+    it('should not create a record and return 422 if missing data', done => {
+      chai.request(server)
+      .post('/api/v1/meals')
+    .send({ meal: {
+      name: 'Breakfast'
+    } })
+      .end((err, response) => {
+        response.should.have.status(422);
+        response.body.error.should.equal(`Expected format: { meal: { name: <String>, date: <Date> } }. You're missing a "date" property.`);
+        done();
+      })
+    })
+  })
+
+  // describe('POST /api/v1/meals/:meal_id/foods/:food_id', () => {
+  //   it('should add a food to a meal')
+  // })
 
 });
