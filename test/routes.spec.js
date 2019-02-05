@@ -286,12 +286,32 @@ describe('API Routes', () => {
   describe('POST /api/v1/meals/:meal_id/foods/:food_id', () => {
     it('should add a food to a meal', done => {
       chai.request(server)
-      .post('/api/v1/meals/5/foods/1')
+      .post('/api/v1/meals/1/foods/5')
       .end((err, response) => {
         response.should.have.status(201);
         response.should.be.json;
         response.body.should.have.property('message');
         response.body.message.should.equal('Successfully added Sesame Chicken to Breakfast')
+        done();
+      })
+    })
+
+    it('should not add meal if meal doesnt exist', done => {
+      chai.request(server)
+      .post('/api/v1/meals/1000/foods/5')
+      .end((err, response) => {
+        response.should.have.status(404);
+        response.body.error.should.equal('Could not find meal with meal_id 1000');
+        done();
+      })
+    })
+
+    it('should not add meal if meal doesnt exist', done => {
+      chai.request(server)
+      .post('/api/v1/meals/1/foods/1000')
+      .end((err, response) => {
+        response.should.have.status(404);
+        response.body.error.should.equal('Could not find food with food_id 1000');
         done();
       })
     })
