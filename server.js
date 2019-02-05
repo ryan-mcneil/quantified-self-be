@@ -222,7 +222,6 @@ app.post('/api/v1/meals', (request, response) => {
         })
     })
     .catch( error => {
-      // eval(pry.it);
       response.status(500).json({ error });
     })
 })

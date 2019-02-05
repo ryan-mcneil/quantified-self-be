@@ -1,26 +1,28 @@
 exports.seed = function(knex, Promise) {
 
   return knex.raw('TRUNCATE TABLE foods RESTART IDENTITY CASCADE')
-  .then(knex('foods').del()) // delete all footnotes first
     .then(() => {
       return Promise.all([
 
-        knex('foods').insert([{id: 1, name: 'Steak', calories: 500},
-                              {id: 2, name: 'Carrots', calories: 10},
-                              {id: 3, name: 'Pizza', calories: 777},
-                              {id: 4, name: 'Yogurt', calories: 50},
-                              {id: 5, name: 'Sesame Chicken', calories: 600},
-                              {id: 6, name: 'Eggs', calories: 200},
-                              {id: 7, name: 'Salad', calories: 100},
-                              {id: 8, name: 'Beans', calories: 250},
-                              {id: 9, name: 'Sandwich', calories: 450},
-                              {id: 10, name: 'Toast', calories: 100},
-                              {id: 11, name: 'Granola Bar', calories: 275},
-                              {id: 12, name: 'Soup', calories: 300}
+        knex('foods').insert([{name: 'Steak', calories: 500},
+                              {name: 'Carrots', calories: 10},
+                              {name: 'Pizza', calories: 777},
+                              {name: 'Yogurt', calories: 50},
+                              {name: 'Sesame Chicken', calories: 600},
+                              {name: 'Eggs', calories: 200},
+                              {name: 'Salad', calories: 100},
+                              {name: 'Beans', calories: 250},
+                              {name: 'Sandwich', calories: 450},
+                              {name: 'Toast', calories: 100},
+                              {name: 'Granola Bar', calories: 275},
+                              {name: 'Soup', calories: 300}
                               ], 'id')
-        .then(() => console.log('Seeding Foods complete!'))
+        .then(() =>
+          console.log('Seeding Foods complete!'))
         .catch(error => console.log(`Error seeding Foods data: ${error}`))
       ])
     })
     .catch(error => console.log(`Error seeding Foods data: ${error}`));
+
+
 };
