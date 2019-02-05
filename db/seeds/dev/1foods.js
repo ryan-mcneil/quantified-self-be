@@ -1,6 +1,7 @@
 exports.seed = function(knex, Promise) {
 
-  return knex('foods').del() // delete all footnotes first
+  return knex.raw('TRUNCATE TABLE foods RESTART IDENTITY CASCADE')
+  .then(knex('foods').del()) // delete all footnotes first
     .then(() => {
       return Promise.all([
 

@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
-const pry = require('pryjs');
+// const pry = require('pryjs');
 
 
 app.use(bodyParser.json());
@@ -222,6 +222,7 @@ app.post('/api/v1/meals', (request, response) => {
         })
     })
     .catch( error => {
+      // eval(pry.it);
       response.status(500).json({ error });
     })
 })
