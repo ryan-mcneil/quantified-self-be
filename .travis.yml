@@ -1,7 +1,6 @@
 language: node_js
 node_js:
   - "stable"
-  - "node"
 cache:
   directories:
     - "node_modules"
@@ -9,3 +8,4 @@ services:
   - postgresql
 before_script:
   - psql -c 'create database quantified_self;' -U postgres
+  - knex migrate:latest
