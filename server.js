@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
-// const pry = require('pryjs');
+const pry = require('pryjs');
 
 
 app.use(bodyParser.json());
@@ -79,7 +79,7 @@ app.post('/api/v1/foods', (request, response) => {
 
 app.put('/api/v1/foods/:id', (request, response) => {
   const food_data = request.body.food;
-  const id = request.params.id;
+  let id = request.params.id;
 
   for (let requiredParameter of ['name', 'calories']) {
     if (!food_data[requiredParameter]) {
@@ -196,6 +196,34 @@ app.get('/api/v1/meals/:meal_id/foods', (request, response) => {
     .catch((error) => {
       response.status(500).json({ error });
     });
+})
+
+app.post('/api/v1/meals', (request, response) => {
+  const meal_data = request.body.meal;
+
+  // const meal_name = request.body.meal.name;
+
+  for (let requiredParameter of ['name', 'date']) {
+    if (!meal_data[requiredParameter]) {
+      return response
+        .status(422)
+        .send({ error: `Expected format: { meal: { name: <String>, date: <Date> } }. You're missing a "${requiredParameter}" property.` });
+    }
+  }
+  // hard code calorie_goal until Goals table is created
+  const calorie_goal = 400;
+  meal_data.calorie_goal = calorie_goal;
+
+  database('meals').insert(meal_data, 'id')
+    .then(meal_id => {
+      database('meals').where({id: meal_id[0]}).select()
+        .then(meal => {
+          response.status(201).json(meal[0]);
+        })
+    })
+    .catch( error => {
+      response.status(500).json({ error });
+    })
 })
 
 module.exports = app

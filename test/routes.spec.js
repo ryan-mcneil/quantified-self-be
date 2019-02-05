@@ -6,7 +6,7 @@ const server = require('../server');
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
-// const pry = require('pryjs');
+const pry = require('pryjs');
 
 chai.use(chaiHttp);
 
@@ -91,22 +91,22 @@ describe('API Routes', () => {
   });
 
   describe('POST /api/v1/foods', () => {
-    // it('should create a new food', done => {
-    //   chai.request(server)
-    //     .post('/api/v1/foods')
-    //     .send({ food: {
-    //       name: 'Chicken Wings',
-    //       calories: 9
-    //     } })
-    //     .end((err, response) => {
-    //       response.should.have.status(201);
-    //       response.body.should.be.a('object');
-    //       response.body.should.have.property('id');
-    //       response.body.name.should.equal('Chicken Wings')
-    //       response.body.calories.should.equal(9);
-    //       done();
-    //     });
-    // });
+    it('should create a new food', done => {
+      chai.request(server)
+        .post('/api/v1/foods')
+        .send({ food: {
+          name: 'Chicken Wings',
+          calories: 9
+        } })
+        .end((err, response) => {
+          response.should.have.status(201);
+          response.body.should.be.a('object');
+          response.body.should.have.property('id');
+          response.body.name.should.equal('Chicken Wings')
+          response.body.calories.should.equal(9);
+          done();
+        });
+    });
 
     it('should not create a record and return 422 if missing data', done => {
       chai.request(server)
@@ -254,33 +254,33 @@ describe('API Routes', () => {
     it('should create a new Meal', done => {
       chai.request(server)
       .post('/api/v1/meals')
-      .send({
+      .send({ meal: {
         name: 'Breakfast',
-        date: '2/1/19'
-      })
+        date: '2/3/19'
+      } })
       .end((err, response) => {
         response.should.have.status(201);
         response.body.should.be.a('object');
         response.body.should.have.property('id');
         response.body.name.should.equal('Breakfast')
-        response.body.date.substring(0, 10).should.equal('2019-02-01');
-        response.body.calorie_goal.should.equal('400');
+        response.body.date.substring(0, 10).should.equal('2019-02-03');
+        response.body.calorie_goal.should.equal(400);
         done();
       })
     })
 
-    // it('should not create a record and return 422 if missing data', done => {
-    //   chai.request(server)
-    //   .post('/api/v1/meals')
-    //   .send({
-    //     name: 'Breakfast'
-    //   })
-    //   .end((err, response) => {
-    //     response.should.have.status(422);
-    //     response.body.error.should.equal(`Expected format: { name: <String>, date: <Date> }. You're missing a "date" property.`);
-    //     done();
-    //   })
-    // })
+    it('should not create a record and return 422 if missing data', done => {
+      chai.request(server)
+      .post('/api/v1/meals')
+    .send({ meal: {
+      name: 'Breakfast'
+    } })
+      .end((err, response) => {
+        response.should.have.status(422);
+        response.body.error.should.equal(`Expected format: { meal: { name: <String>, date: <Date> } }. You're missing a "date" property.`);
+        done();
+      })
+    })
   })
 
   // describe('POST /api/v1/meals/:meal_id/foods/:food_id', () => {
