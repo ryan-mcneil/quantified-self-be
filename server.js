@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
-const pry = require('pryjs');
+// const pry = require('pryjs');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -209,27 +209,39 @@ app.post('/api/v1/meals', (request, response) => {
         .send({ error: `Expected format: { meal: { name: <String>, date: <Date> } }. You're missing a "${requiredParameter}" property.` });
     }
   }
-
-  database('goals')
-    .where({name: meal_name})
+  database('meals')
+    .where({name: meal_name, date: meal_date})
     .select()
-    .then( goals => {
-      let calorie_goal = goals[0].calories;
-      database('meals').insert({name: meal_name, date: meal_date, calorie_goal: calorie_goal}, 'id')
-        .then(meal_id => {
-          database('meals').where({id: meal_id[0]}).select()
+    .then( meals => {
+      if (meals.length) {
+        return response
+          .status(422)
+          .send({ error: `Meal already exists for that Date.` });
+      } else {
+        database('goals')
+        .where({name: meal_name})
+        .select()
+        .then( goals => {
+          let calorie_goal = goals[0].calories;
+          database('meals').insert({name: meal_name, date: meal_date, calorie_goal: calorie_goal}, 'id')
+          .then(meal_id => {
+            database('meals').where({id: meal_id[0]}).select()
             .then(meal => {
               response.status(201).json(meal[0]);
             })
+          })
+          .catch( error => {
+            response.status(500).json({ error });
+          })
         })
         .catch( error => {
           response.status(500).json({ error });
         })
+      }
     })
     .catch( error => {
       response.status(500).json({ error });
     })
-
 })
 
 app.post('/api/v1/meals/:meal_id/foods/:food_id', (request, response) => {
