@@ -6,7 +6,7 @@ const server = require('../server');
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
-const pry = require('pryjs');
+// const pry = require('pryjs');
 
 chai.use(chaiHttp);
 
@@ -255,16 +255,16 @@ describe('API Routes', () => {
       chai.request(server)
       .post('/api/v1/meals')
       .send({ meal: {
-        name: 'Breakfast',
+        name: 'Lunch',
         date: '2/3/19'
       } })
       .end((err, response) => {
         response.should.have.status(201);
         response.body.should.be.a('object');
         response.body.should.have.property('id');
-        response.body.name.should.equal('Breakfast')
+        response.body.name.should.equal('Lunch')
         response.body.date.substring(0, 10).should.equal('2019-02-03');
-        response.body.calorie_goal.should.equal(400);
+        response.body.calorie_goal.should.equal(700);
         done();
       })
     })
