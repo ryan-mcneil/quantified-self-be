@@ -361,4 +361,36 @@ describe('API Routes', () => {
     });
   })
 
+  describe('PATCH /api/v1/goals/:id', () => {
+    it ('should update a goal', done => {
+      chai.request(server)
+        .put('/api/v1/goals/1')
+        .send({ goal: {
+          name: 'Breakfast',
+          calories: 250
+        } })
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.should.be.a('object');
+          response.body.id.should.equal(1);
+          response.body.name.should.equal('Breakfast');
+          response.body.calories.should.equal(250);
+          done();
+        })
+    })
+
+    it ('should not update a record and return 422 if missing data', done => {
+      chai.request(server)
+      .put('/api/v1/goals/1')
+      .send({ goal: {
+        name: 'Breakfast'
+      } })
+      .end((err, response) => {
+        response.should.have.status(422);
+        response.body.error.should.equal(`Expected format: { goal: { name: <String>, calories: <Integer> } }. You're missing a "calories" property.`);
+        done();
+      })
+    })
+  })
+
 });

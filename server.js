@@ -289,4 +289,28 @@ app.get('/api/v1/goals', (request,response) => {
   })
 })
 
+app.put('/api/v1/goals/:id', (request, response) => {
+  const goal_data = request.body.goal;
+  let id = request.params.id;
+
+  for (let requiredParameter of ['name', 'calories']) {
+    if (!goal_data[requiredParameter]) {
+      return response
+        .status(422)
+        .send({ error: `Expected format: { goal: { name: <String>, calories: <Integer> } }. You're missing a "${requiredParameter}" property.` });
+    }
+  }
+
+  database('goals').where({id: id}).update(goal_data)
+    .then(goal_id => {
+      database('goals').where({id: goal_id}).select()
+        .then(goal => {
+          response.status(200).json(goal[0]);
+        })
+    })
+    .catch(error => {
+      response.status(400).json({ error });
+    })
+})
+
 module.exports = app
