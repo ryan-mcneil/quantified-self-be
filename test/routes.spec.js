@@ -318,18 +318,19 @@ describe('API Routes', () => {
   })
 
   describe('DELETE /api/v1/meals/:meal_id/foods/:food_id', done => {
-    it ('should delete a meal_food', done => {
+    it('should delete a meal_food', done => {
       chai.request(server)
         .delete('/api/v1/meals/2/foods/4')
         .end((err, response) => {
-          response.should.have.status(204);
+          // eval(pry.it)
+          response.should.have.status(201);
           response.body.should.have.property('message');
-          response.body.message.should.equal('Successfully added Sesame Chicken to Breakfast')
+          response.body.message.should.equal('Successfully removed Yogurt from Lunch')
           done();
       });
     });
 
-    it ('should not delete a meal_food if id combo doesnt exist', done => {
+    it('should not delete a meal_food if id combo doesnt exist', done => {
       chai.request(server)
       .delete('/api/v1/meals/2/foods/1000')
       .end((err, response) => {
