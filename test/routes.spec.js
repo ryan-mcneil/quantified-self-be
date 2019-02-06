@@ -306,7 +306,7 @@ describe('API Routes', () => {
       })
     })
 
-    it('should not add meal if meal doesnt exist', done => {
+    it('should not add meal if food doesnt exist', done => {
       chai.request(server)
       .post('/api/v1/meals/1/foods/1000')
       .end((err, response) => {
