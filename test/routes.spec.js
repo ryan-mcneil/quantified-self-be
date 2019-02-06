@@ -6,7 +6,7 @@ const server = require('../server');
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
-// const pry = require('pryjs');
+const pry = require('pryjs');
 
 chai.use(chaiHttp);
 
@@ -283,8 +283,39 @@ describe('API Routes', () => {
     })
   })
 
-  // describe('POST /api/v1/meals/:meal_id/foods/:food_id', () => {
-  //   it('should add a food to a meal')
-  // })
+  describe('POST /api/v1/meals/:meal_id/foods/:food_id', () => {
+    it('should add a food to a meal', done => {
+      chai.request(server)
+      .post('/api/v1/meals/1/foods/5')
+      .end((err, response) => {
+        response.should.have.status(201);
+        response.should.be.json;
+        response.body.should.have.property('message');
+        response.body.message.should.equal('Successfully added Sesame Chicken to Breakfast')
+        done();
+      })
+    })
+
+    it('should not add meal_food if meal doesnt exist', done => {
+      chai.request(server)
+      .post('/api/v1/meals/1000/foods/5')
+      .end((err, response) => {
+        response.should.have.status(404);
+
+        response.body.error.detail.should.equal('Key (meal_id)=(1000) is not present in table "meals".');
+        done();
+      })
+    })
+
+    it('should not add meal_food if food doesnt exist', done => {
+      chai.request(server)
+      .post('/api/v1/meals/1/foods/1000')
+      .end((err, response) => {
+        response.should.have.status(404);
+        response.body.error.detail.should.equal('Key (food_id)=(1000) is not present in table "foods".');
+        done();
+      })
+    })
+  })
 
 });

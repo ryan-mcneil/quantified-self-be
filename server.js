@@ -5,8 +5,7 @@ const bodyParser = require('body-parser');
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
-// const pry = require('pryjs');
-
+const pry = require('pryjs');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -19,7 +18,7 @@ app.use(function (request, response, next) {
   response.header("Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept");
   response.header("Access-Control-Allow-Methods",
-    "GET, POST, PATCH, DELETE, OPTIONS");
+    "GET, POST, PUT, DELETE, OPTIONS");
   next();
 });
 
@@ -223,6 +222,64 @@ app.post('/api/v1/meals', (request, response) => {
     })
     .catch( error => {
       response.status(500).json({ error });
+    })
+})
+
+app.post('/api/v1/meals/:meal_id/foods/:food_id', (request, response) => {
+  let meal_id = request.params.meal_id;
+  let food_id = request.params.food_id;
+  let meal_name;
+  let food_name;
+  //
+  // database('meals').where({id: meal_id}).select()
+  //   .then( meals => {
+  //     if (meals.length) {
+  //       meal_name = meals[0].name;
+  //     } else {
+  //       return response.status(404).send({
+  //         error: `Could not find meal with meal_id ${meal_id}`
+  //       });
+  //     }
+  //   })
+  //   .catch( error => {
+  //     response.status(500).json({ error });
+  //   })
+  //
+  // database('foods').where({id: food_id}).select()
+  //   .then( foods => {
+  //     if (foods.length) {
+  //       food_name = foods[0].name;
+  //     } else {
+  //       return response.status(404).send({
+  //         error: `Could not find food with food_id ${food_id}`
+  //       });
+  //     }
+  //   })
+  //   .catch( error => {
+  //     response.status(500).json({ error });
+  //   })
+  //
+  //   database('meal_foods').insert({meal_id: meal_id, food_id: food_id}, 'id')
+  //   .then( id => {
+  //     response.status(201).json({ message: `Successfully added ${food_name} to ${meal_name}`})
+  //   })
+  //   .catch( error => {
+  //     response.status(500).json({ error });
+  //   })
+    database('meal_foods').insert({meal_id: meal_id, food_id: food_id}, 'id')
+    .then( id => {
+      database('meals').where({id: meal_id}).select()
+        .then( meals => {
+            meal_name = meals[0].name;
+            database('foods').where({id: food_id}).select()
+              .then( foods => {
+                  food_name = foods[0].name;
+                  response.status(201).json({ message: `Successfully added ${food_name} to ${meal_name}`})
+              })
+        })
+    })
+    .catch( error => {
+      response.status(404).json({ error });
     })
 })
 
