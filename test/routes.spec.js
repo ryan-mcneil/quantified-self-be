@@ -301,7 +301,6 @@ describe('API Routes', () => {
       .post('/api/v1/meals/1000/foods/5')
       .end((err, response) => {
         response.should.have.status(404);
-
         response.body.error.detail.should.equal('Key (meal_id)=(1000) is not present in table "meals".');
         done();
       })
@@ -316,6 +315,31 @@ describe('API Routes', () => {
         done();
       })
     })
+  })
+
+  describe('DELETE /api/v1/meals/:meal_id/foods/:food_id', done => {
+    it ('should delete a meal_food', done => {
+      chai.request(server)
+        .delete('/api/v1/meals/2/foods/4')
+        .end((err, response) => {
+          response.should.have.status(204);
+          response.body.should.have.property('message');
+          response.body.message.should.equal('Successfully added Sesame Chicken to Breakfast')
+          done();
+      });
+    });
+
+    it ('should not delete a meal_food if id combo doesnt exist', done => {
+      chai.request(server)
+      .delete('/api/v1/meals/2/foods/1000')
+      .end((err, response) => {
+        response.should.have.status(404);
+        response.body.should.have.property('error');
+        response.body.error.should.equal('Could not find meal_food with those parameters');
+        done();
+      });
+    });
+
   })
 
 });
