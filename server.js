@@ -279,4 +279,14 @@ app.delete('/api/v1/meals/:meal_id/foods/:food_id', (request,response) => {
   })
 })
 
+app.get('/api/v1/goals', (request,response) => {
+  database('goals').select()
+  .then( goals => {
+    response.status(200).json(goals);
+  })
+  .catch( error => {
+    response.status(500).json({ error });
+  })
+})
+
 module.exports = app
