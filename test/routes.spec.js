@@ -317,7 +317,7 @@ describe('API Routes', () => {
     })
   })
 
-  describe('DELETE /api/v1/meals/:meal_id/foods/:food_id', done => {
+  describe('DELETE /api/v1/meals/:meal_id/foods/:food_id', () => {
     it('should delete a meal_food', done => {
       chai.request(server)
         .delete('/api/v1/meals/2/foods/4')
@@ -341,6 +341,24 @@ describe('API Routes', () => {
       });
     });
 
+  })
+
+  describe('GET /api/v1/goals', () => {
+    it('should return all of the goals', done => {
+      chai.request(server)
+        .get('/api/v1/goals')
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.should.be.json;
+          response.body.should.be.a('array');
+          response.body.length.should.equal(4);
+          response.body[0].should.have.property('name');
+          response.body[0].name.should.equal('Breakfast');
+          response.body[0].should.have.property('calories');
+          response.body[0].calories.should.equal(400);
+          done();
+      });
+    });
   })
 
 });
