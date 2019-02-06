@@ -281,6 +281,20 @@ describe('API Routes', () => {
         done();
       })
     })
+
+    it('should not create a record and return 422 if date/name combo already exists', done => {
+      chai.request(server)
+      .post('/api/v1/meals')
+      .send({ meal: {
+        name: 'Breakfast',
+        date: '2/1/19'
+      } })
+      .end((err, response) => {
+        response.should.have.status(422);
+        response.body.error.should.equal(`Meal already exists for that Date.`);
+        done();
+      })
+    })
   })
 
   describe('POST /api/v1/meals/:meal_id/foods/:food_id', () => {
