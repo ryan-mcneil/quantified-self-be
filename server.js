@@ -120,8 +120,8 @@ app.delete('/api/v1/foods/:id', (request, response) => {
 
 app.get('/api/v1/meals', (request, response) => {
   database('meals')
-  .join('meal_foods', 'meal_foods.meal_id', '=', 'meals.id')
-  .join('foods', 'meal_foods.food_id', '=', 'foods.id')
+  .leftJoin('meal_foods', 'meal_foods.meal_id', '=', 'meals.id')
+  .leftJoin('foods', 'meal_foods.food_id', '=', 'foods.id')
   .select( 'meals.id AS meal_id', 'meals.name AS meal_name', 'meals.date AS meal_date', 'meals.calorie_goal AS meal_goal', 'foods.id AS food_id', 'foods.name AS food_name', 'foods.calories AS food_calories')
     .then((meals_data) => {
       let meals = [];
@@ -156,8 +156,8 @@ app.get('/api/v1/meals', (request, response) => {
 
 app.get('/api/v1/meals/:meal_id/foods', (request, response) => {
   database('meals')
-  .join('meal_foods', 'meal_foods.meal_id', '=', 'meals.id')
-  .join('foods', 'meal_foods.food_id', '=', 'foods.id')
+  .leftJoin('meal_foods', 'meal_foods.meal_id', '=', 'meals.id')
+  .leftJoin('foods', 'meal_foods.food_id', '=', 'foods.id')
   .where('meal_foods.meal_id', request.params.meal_id)
   .select( 'meals.id AS meal_id', 'meals.name AS meal_name', 'meals.date AS meal_date', 'meals.calorie_goal AS meal_goal', 'foods.id AS food_id', 'foods.name AS food_name', 'foods.calories AS food_calories')
     .then((meal_data) => {
