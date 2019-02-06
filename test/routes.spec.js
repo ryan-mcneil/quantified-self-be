@@ -185,7 +185,7 @@ describe('API Routes', () => {
         response.should.have.status(200);
         response.should.be.json;
         response.body.should.be.a('array');
-        response.body.length.should.equal(8);
+        response.body.length.should.equal(9);
         response.body[0].should.have.property('name');
         response.body[0].name.should.equal('Breakfast');
         response.body[0].should.have.property('date');
