@@ -6,7 +6,7 @@ const server = require('../server');
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
-// const pry = require('pryjs');
+const pry = require('pryjs');
 
 chai.use(chaiHttp);
 
@@ -296,22 +296,23 @@ describe('API Routes', () => {
       })
     })
 
-    it('should not add meal if meal doesnt exist', done => {
+    it('should not add meal_food if meal doesnt exist', done => {
       chai.request(server)
       .post('/api/v1/meals/1000/foods/5')
       .end((err, response) => {
         response.should.have.status(404);
-        response.body.error.should.equal('Could not find meal with meal_id 1000');
+
+        response.body.error.detail.should.equal('Key (meal_id)=(1000) is not present in table "meals".');
         done();
       })
     })
 
-    it('should not add meal if food doesnt exist', done => {
+    it('should not add meal_food if food doesnt exist', done => {
       chai.request(server)
       .post('/api/v1/meals/1/foods/1000')
       .end((err, response) => {
         response.should.have.status(404);
-        response.body.error.should.equal('Could not find food with food_id 1000');
+        response.body.error.detail.should.equal('Key (food_id)=(1000) is not present in table "foods".');
         done();
       })
     })
