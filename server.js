@@ -199,8 +199,8 @@ app.get('/api/v1/meals/:meal_id/foods', (request, response) => {
 
 app.post('/api/v1/meals', (request, response) => {
   const meal_data = request.body.meal;
-
-  // const meal_name = request.body.meal.name;
+  const meal_name = request.body.meal.name;
+  const meal_date = request.body.meal.date;
 
   for (let requiredParameter of ['name', 'date']) {
     if (!meal_data[requiredParameter]) {
@@ -209,36 +209,41 @@ app.post('/api/v1/meals', (request, response) => {
         .send({ error: `Expected format: { meal: { name: <String>, date: <Date> } }. You're missing a "${requiredParameter}" property.` });
     }
   }
-  // hard code calorie_goal until Goals table is created
-  const calorie_goal = 400;
-  meal_data.calorie_goal = calorie_goal;
 
-  database('meals').insert(meal_data, 'id')
-    .then(meal_id => {
-      database('meals').where({id: meal_id[0]}).select()
-        .then(meal => {
-          response.status(201).json(meal[0]);
+  database('goals')
+    .where({name: meal_name})
+    .select()
+    .then( goals => {
+      let calorie_goal = goals[0].calories;
+      database('meals').insert({name: meal_name, date: meal_date, calorie_goal: calorie_goal}, 'id')
+        .then(meal_id => {
+          database('meals').where({id: meal_id[0]}).select()
+            .then(meal => {
+              response.status(201).json(meal[0]);
+            })
+        })
+        .catch( error => {
+          response.status(500).json({ error });
         })
     })
     .catch( error => {
       response.status(500).json({ error });
     })
+
 })
 
 app.post('/api/v1/meals/:meal_id/foods/:food_id', (request, response) => {
   let meal_id = request.params.meal_id;
   let food_id = request.params.food_id;
-  let meal_name;
-  let food_name;
 
   database('meal_foods').insert({meal_id: meal_id, food_id: food_id}, 'id')
   .then( id => {
     database('meals').where({id: meal_id}).select()
       .then( meals => {
-          meal_name = meals[0].name;
+          let meal_name = meals[0].name;
           database('foods').where({id: food_id}).select()
             .then( foods => {
-                food_name = foods[0].name;
+                let food_name = foods[0].name;
                 response.status(201).json({ message: `Successfully added ${food_name} to ${meal_name}`})
             })
       })
@@ -251,8 +256,6 @@ app.post('/api/v1/meals/:meal_id/foods/:food_id', (request, response) => {
 app.delete('/api/v1/meals/:meal_id/foods/:food_id', (request,response) => {
   let meal_id = request.params.meal_id;
   let food_id = request.params.food_id;
-  let meal_name;
-  let food_name;
 
   database('meal_foods')
   .where({meal_id: meal_id, food_id: food_id})
@@ -261,10 +264,10 @@ app.delete('/api/v1/meals/:meal_id/foods/:food_id', (request,response) => {
     if (id) {
       database('meals').where({id: meal_id}).select()
       .then( meals => {
-        meal_name = meals[0].name;
+        let meal_name = meals[0].name;
         database('foods').where({id: food_id}).select()
         .then( foods => {
-          food_name = foods[0].name;
+          let food_name = foods[0].name;
           response.status(201).json({ message: `Successfully removed ${food_name} from ${meal_name}`})
         })
       })
