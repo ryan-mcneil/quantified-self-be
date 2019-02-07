@@ -32,47 +32,6 @@ app.listen(app.get('port'), () => {
 app.use('/api/v1/foods', foods)
 app.use('/api/v1/foods/:id', foods)
 
-
-app.put('/api/v1/foods/:id', (request, response) => {
-  const food_data = request.body.food;
-  let id = request.params.id;
-
-  for (let requiredParameter of ['name', 'calories']) {
-    if (!food_data[requiredParameter]) {
-      return response
-        .status(422)
-        .send({ error: `Expected format: { food: { name: <String>, calories: <Integer> } }. You're missing a "${requiredParameter}" property.` });
-    }
-  }
-
-  database('foods').where({id: id}).update(food_data)
-    .then(food_id => {
-      database('foods').where({id: food_id}).select()
-        .then(food => {
-          response.status(200).json(food[0]);
-        })
-    })
-    .catch(error => {
-      response.status(400).json({ error });
-    })
-})
-
-app.delete('/api/v1/foods/:id', (request, response) => {
-  database('foods').where('id', request.params.id).del()
-    .then((foods) => {
-      if(foods) {
-        response.status(204).json();
-      } else {
-        response.status(404).json({
-          error: `Could not find food with id ${request.params.id}`
-        });
-      }
-    })
-    .catch((error) => {
-      response.status(500).json({ error });
-    });
-});
-
 // -------Meals-------
 
 app.get('/api/v1/meals', (request, response) => {
