@@ -6,7 +6,6 @@ const server = require('../server');
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
-// const pry = require('pryjs');
 
 chai.use(chaiHttp);
 
@@ -211,7 +210,7 @@ describe('API Routes', () => {
   })
 
   describe('GET /api/v1/meals/:meal_id/foods', () => {
-    it ('should get foods for a specific meal', done => {
+    it('should get foods for a specific meal', done => {
       chai.request(server)
       .get('/api/v1/meals/2/foods')
       .end((err,response) => {
