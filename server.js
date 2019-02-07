@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const foods = require('./lib/routes/api/v1/foods')
 const meals = require('./lib/routes/api/v1/meals')
+const goals = require('./lib/routes/api/v1/goals')
 
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
@@ -28,7 +29,7 @@ app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
 });
 
-// ----------Foods---------
+// -------Foods-------
 
 app.use('/api/v1/foods', foods)
 app.use('/api/v1/foods/:id', foods)
@@ -177,15 +178,20 @@ app.delete('/api/v1/meals/:meal_id/foods/:food_id', (request,response) => {
   })
 })
 
-app.get('/api/v1/goals', (request,response) => {
-  database('goals').select()
-  .then( goals => {
-    response.status(200).json(goals);
-  })
-  .catch( error => {
-    response.status(500).json({ error });
-  })
-})
+// -------Goals-------
+
+app.use('/api/v1/goals', goals)
+
+
+// app.get('/api/v1/goals', (request,response) => {
+//   database('goals').select()
+//   .then( goals => {
+//     response.status(200).json(goals);
+//   })
+//   .catch( error => {
+//     response.status(500).json({ error });
+//   })
+// })
 
 app.put('/api/v1/goals/:id', (request, response) => {
   const goal_data = request.body.goal;

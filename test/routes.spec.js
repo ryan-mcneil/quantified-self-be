@@ -251,7 +251,7 @@ describe('API Routes', () => {
   })
 
   describe('POST /api/v1/meals', () => {
-    it.only('should create a new Meal', done => {
+    it('should create a new Meal', done => {
       chai.request(server)
       .post('/api/v1/meals')
       .send({ meal: {
