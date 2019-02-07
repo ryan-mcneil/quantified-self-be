@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const foods = require('./lib/routes/api/v1/foods')
 const meals = require('./lib/routes/api/v1/meals')
+const meal_foods = require('./lib/routes/api/v1/meal_foods')
 const goals = require('./lib/routes/api/v1/goals')
 
 const environment = process.env.NODE_ENV || 'development';
@@ -38,48 +39,50 @@ app.use('/api/v1/foods/:id', foods)
 
 app.use('/api/v1/meals', meals)
 
-app.get('/api/v1/meals/:meal_id/foods', (request, response) => {
-  database('meals')
-  .leftJoin('meal_foods', 'meal_foods.meal_id', '=', 'meals.id')
-  .leftJoin('foods', 'meal_foods.food_id', '=', 'foods.id')
-  .where('meal_foods.meal_id', request.params.meal_id)
-  .select( 'meals.id AS meal_id', 'meals.name AS meal_name', 'meals.date AS meal_date', 'meals.calorie_goal AS meal_goal', 'foods.id AS food_id', 'foods.name AS food_name', 'foods.calories AS food_calories')
-    .then((meal_data) => {
-      if(meal_data.length) {
-        let meals = [];
-        meal_data.forEach( data => {
-          if ( meals.find( meal => meal.id == data.meal_id)) {
-            let existing_meal = meals.find( meal => meal.id == data.meal_id);
-            existing_meal.foods.push({
-              id: data.food_id,
-              name: data.food_name,
-              calories: data.food_calories
-            })
-          } else {
-            meals.push({
-              id: data.meal_id,
-              name: data.meal_name,
-              date: data.meal_date,
-              calorie_goal: data.meal_goal,
-              foods: [{
-                id: data.food_id,
-                name: data.food_name,
-                calories: data.food_calories
-              }]
-            })
-          }
-        })
-        response.status(200).json(meals[0]);
-      } else {
-        response.status(404).json({
-          error: `Could not find meal with meal_id ${request.params.meal_id}`
-        });
-      }
-    })
-    .catch((error) => {
-      response.status(500).json({ error });
-    });
-})
+app.use('/api/v1/meals', meal_foods)
+
+// app.get('/api/v1/meals/:meal_id/foods', (request, response) => {
+//   database('meals')
+//   .leftJoin('meal_foods', 'meal_foods.meal_id', '=', 'meals.id')
+//   .leftJoin('foods', 'meal_foods.food_id', '=', 'foods.id')
+//   .where('meal_foods.meal_id', request.params.meal_id)
+//   .select( 'meals.id AS meal_id', 'meals.name AS meal_name', 'meals.date AS meal_date', 'meals.calorie_goal AS meal_goal', 'foods.id AS food_id', 'foods.name AS food_name', 'foods.calories AS food_calories')
+//     .then((meal_data) => {
+//       if(meal_data.length) {
+//         let meals = [];
+//         meal_data.forEach( data => {
+//           if ( meals.find( meal => meal.id == data.meal_id)) {
+//             let existing_meal = meals.find( meal => meal.id == data.meal_id);
+//             existing_meal.foods.push({
+//               id: data.food_id,
+//               name: data.food_name,
+//               calories: data.food_calories
+//             })
+//           } else {
+//             meals.push({
+//               id: data.meal_id,
+//               name: data.meal_name,
+//               date: data.meal_date,
+//               calorie_goal: data.meal_goal,
+//               foods: [{
+//                 id: data.food_id,
+//                 name: data.food_name,
+//                 calories: data.food_calories
+//               }]
+//             })
+//           }
+//         })
+//         response.status(200).json(meals[0]);
+//       } else {
+//         response.status(404).json({
+//           error: `Could not find meal with meal_id ${request.params.meal_id}`
+//         });
+//       }
+//     })
+//     .catch((error) => {
+//       response.status(500).json({ error });
+//     });
+// })
 
 app.post('/api/v1/meals/:meal_id/foods/:food_id', (request, response) => {
   let meal_id = request.params.meal_id;
@@ -136,29 +139,5 @@ app.delete('/api/v1/meals/:meal_id/foods/:food_id', (request,response) => {
 app.use('/api/v1/goals', goals)
 
 app.use('/api/v1/goals/:id', goals)
-
-// app.put('/api/v1/goals/:id', (request, response) => {
-//   const goal_data = request.body.goal;
-//   let id = request.params.id;
-//
-//   for (let requiredParameter of ['name', 'calories']) {
-//     if (!goal_data[requiredParameter]) {
-//       return response
-//         .status(422)
-//         .send({ error: `Expected format: { goal: { name: <String>, calories: <Integer> } }. You're missing a "${requiredParameter}" property.` });
-//     }
-//   }
-//
-//   database('goals').where({id: id}).update(goal_data)
-//     .then(goal_id => {
-//       database('goals').where({id: goal_id}).select()
-//         .then(goal => {
-//           response.status(200).json(goal[0]);
-//         })
-//     })
-//     .catch(error => {
-//       response.status(400).json({ error });
-//     })
-// })
 
 module.exports = app

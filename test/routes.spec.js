@@ -211,7 +211,7 @@ describe('API Routes', () => {
   })
 
   describe('GET /api/v1/meals/:meal_id/foods', () => {
-    it ('should get foods for a specific meal', done => {
+    it('should get foods for a specific meal', done => {
       chai.request(server)
       .get('/api/v1/meals/2/foods')
       .end((err,response) => {
