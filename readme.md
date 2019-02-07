@@ -82,8 +82,20 @@ Once the server is running, visit in your browser:
 }  
 ```
 
-### POST/PUT '/api/v1/foods[/:id]'
- * Create/update [specified] food
+### POST '/api/v1/foods'
+ * Create a food
+ * Request body must be formatted like this:
+```json
+{  
+  "food": {  
+    "name": "Chicken Wings",  
+    "calories": 9  
+  }  
+}  
+```
+
+### PUT '/api/v1/foods/:id'
+ * Update specified food
  * Request body must be formatted like this:
 ```json
 {  
