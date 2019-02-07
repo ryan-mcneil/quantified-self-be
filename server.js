@@ -81,53 +81,6 @@ app.get('/api/v1/meals/:meal_id/foods', (request, response) => {
     });
 })
 
-// app.post('/api/v1/meals', (request, response) => {
-//   const meal_data = request.body.meal;
-//   const meal_name = request.body.meal.name;
-//   const meal_date = request.body.meal.date;
-//
-//   for (let requiredParameter of ['name', 'date']) {
-//     if (!meal_data[requiredParameter]) {
-//       return response
-//         .status(422)
-//         .send({ error: `Expected format: { meal: { name: <String>, date: <Date> } }. You're missing a "${requiredParameter}" property.` });
-//     }
-//   }
-//   database('meals')
-//     .where({name: meal_name, date: meal_date})
-//     .select()
-//     .then( meals => {
-//       if (meals.length) {
-//         return response
-//           .status(422)
-//           .send({ error: `Meal already exists for that Date.` });
-//       } else {
-//         database('goals')
-//         .where({name: meal_name})
-//         .select()
-//         .then( goals => {
-//           let calorie_goal = goals[0].calories;
-//           database('meals').insert({name: meal_name, date: meal_date, calorie_goal: calorie_goal}, 'id')
-//           .then(meal_id => {
-//             database('meals').where({id: meal_id[0]}).select()
-//             .then(meal => {
-//               response.status(201).json(meal[0]);
-//             })
-//           })
-//           .catch( error => {
-//             response.status(500).json({ error });
-//           })
-//         })
-//         .catch( error => {
-//           response.status(500).json({ error });
-//         })
-//       }
-//     })
-//     .catch( error => {
-//       response.status(500).json({ error });
-//     })
-// })
-
 app.post('/api/v1/meals/:meal_id/foods/:food_id', (request, response) => {
   let meal_id = request.params.meal_id;
   let food_id = request.params.food_id;
@@ -182,39 +135,30 @@ app.delete('/api/v1/meals/:meal_id/foods/:food_id', (request,response) => {
 
 app.use('/api/v1/goals', goals)
 
+app.use('/api/v1/goals/:id', goals)
 
-// app.get('/api/v1/goals', (request,response) => {
-//   database('goals').select()
-//   .then( goals => {
-//     response.status(200).json(goals);
-//   })
-//   .catch( error => {
-//     response.status(500).json({ error });
-//   })
+// app.put('/api/v1/goals/:id', (request, response) => {
+//   const goal_data = request.body.goal;
+//   let id = request.params.id;
+//
+//   for (let requiredParameter of ['name', 'calories']) {
+//     if (!goal_data[requiredParameter]) {
+//       return response
+//         .status(422)
+//         .send({ error: `Expected format: { goal: { name: <String>, calories: <Integer> } }. You're missing a "${requiredParameter}" property.` });
+//     }
+//   }
+//
+//   database('goals').where({id: id}).update(goal_data)
+//     .then(goal_id => {
+//       database('goals').where({id: goal_id}).select()
+//         .then(goal => {
+//           response.status(200).json(goal[0]);
+//         })
+//     })
+//     .catch(error => {
+//       response.status(400).json({ error });
+//     })
 // })
-
-app.put('/api/v1/goals/:id', (request, response) => {
-  const goal_data = request.body.goal;
-  let id = request.params.id;
-
-  for (let requiredParameter of ['name', 'calories']) {
-    if (!goal_data[requiredParameter]) {
-      return response
-        .status(422)
-        .send({ error: `Expected format: { goal: { name: <String>, calories: <Integer> } }. You're missing a "${requiredParameter}" property.` });
-    }
-  }
-
-  database('goals').where({id: id}).update(goal_data)
-    .then(goal_id => {
-      database('goals').where({id: goal_id}).select()
-        .then(goal => {
-          response.status(200).json(goal[0]);
-        })
-    })
-    .catch(error => {
-      response.status(400).json({ error });
-    })
-})
 
 module.exports = app
