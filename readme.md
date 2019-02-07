@@ -48,142 +48,177 @@ Once the server is running, visit in your browser:
 
 ### GET '/api/v1/foods'
  * Returns array of all active Food Objects
-
+```json
 [
-  {
-    "id": 3,
-    "name": "Orange",
-    "calories": 120,
-    "created_at": "2019-01-31T01:52:08.575Z",
-    "updated_at": "2019-01-31T01:52:08.575Z",
-    "active": true
-  },
-  {
-    "id": 6,
-    "name": "Coffee",
-    "calories": 90,
-    "created_at": "2019-01-31T19:08:23.130Z",
-    "updated_at": "2019-01-31T19:08:23.130Z",
-    "active": true
+  {  
+    "id": 3,  
+    "name": "Orange",  
+    "calories": 120,  
+    "created_at": "2019-01-31T01:52:08.575Z",  
+    "updated_at": "2019-01-31T01:52:08.575Z",  
+    "active": true  
+  },  
+  {  
+    "id": 6,  
+    "name": "Coffee",  
+    "calories": 90,  
+    "created_at": "2019-01-31T19:08:23.130Z",  
+    "updated_at": "2019-01-31T19:08:23.130Z",  
+    "active": true  
   }
-]
+]  
+```
 
 ### GET '/api/v1/food/:id'
 * Returns a specified food
-
-{
-  "id": 3,
-  "name": "Orange",
-  "calories": 120,
-  "created_at": "2019-01-31T01:52:08.575Z",
-  "updated_at": "2019-01-31T01:52:08.575Z",
-  "active": true
-}
-
+```json
+{  
+  "id": 3,  
+  "name": "Orange",  
+  "calories": 120,  
+  "created_at": "2019-01-31T01:52:08.575Z",  
+  "updated_at": "2019-01-31T01:52:08.575Z",  
+  "active": true  
+}  
+```
 
 ### POST/PUT '/api/v1/foods[/:id]'
  * Create/update [specified] food
- * Data must be formatted like this:
-
-{
-  food: {
-    name: 'Chicken Wings',
-    calories: 9
-  }
-}
+ * Request body must be formatted like this:
+```json
+{  
+  "food": {  
+    "name": "Chicken Wings",  
+    "calories": 9  
+  }  
+}  
+```
 
 ### DELETE '/api/v1/foods/:id'
 * Deletes specified food
 
 ### GET '/api/v1/meals'
 * Returns an array of all Meal objects with that meal's Food objects
-
+```json
 [
-  {
-    "id": 3,
-    "name": "Breakfast",
-    "date": "2019-02-05T00:00:00.000Z",
-    "calorie_goal": 400,
-    "foods": [
-      {
-        "id": 58,
-        "name": "Cereal",
-        "calories": 360
+  {  
+    "id": 3,  
+    "name": "Breakfast",  
+    "date": "2019-02-05T00:00:00.000Z",  
+    "calorie_goal": 400,  
+    "foods": [  
+      {  
+        "id": 58,  
+        "name": "Cereal",  
+        "calories": 360  
       }
-    ]
-  },
-  {
-    "id": 4,
-    "name": "Dinner",
-    "date": "2019-02-05T00:00:00.000Z",
-    "calorie_goal": 800,
-    "foods": [
-      {
-        "id": 1,
-        "name": "Buffalo Wings",
-        "calories": 600
-      },
-      {
-        "id": 60,
-        "name": "Mountain Dew",
-        "calories": 170
+    ]  
+  },  
+  {  
+    "id": 4,  
+    "name": "Dinner",  
+    "date": "2019-02-05T00:00:00.000Z",  
+    "calorie_goal": 800,  
+    "foods": [  
+      {  
+        "id": 1,  
+        "name": "Buffalo Wings",  
+        "calories": 600  
+      },  
+      {  
+        "id": 60,  
+        "name": "Mountain Dew",  
+        "calories": 170  
       }
-    ]
+    ]  
   }
-]
+]  
+```
+
+### POST '/api/v1/meals
+* Create a meal
+* Request body must be formatted like this:
+```json
+{  
+  "meal": {  
+    "name": "Lunch",  
+    "date": "2/3/19"  
+  }  
+}
+```
 
 ### GET '/api/v1/meals/:meal_id/foods'
 * Returns a specified Meal object with that meal's Food objects
-
-{
-  "id": 3,
-  "name": "Breakfast",
-  "date": "2019-02-05T00:00:00.000Z",
-  "calorie_goal": 400,
-  "foods": [
-    {
-      "id": 58,
-      "name": "Cereal",
-      "calories": 360
+```json
+{  
+  "id": 3,  
+  "name": "Breakfast",  
+  "date": "2019-02-05T00:00:00.000Z",  
+  "calorie_goal": 400,  
+  "foods": [  
+    {  
+      "id": 58,  
+      "name": "Cereal",  
+      "calories": 360  
     }
-  ]
-}
+  ]  
+}  
+```
 
-### '/api/v1/goals'
+### POST '/api/v1/meals/:meal_id/foods/:food_id
+* Create a meal
+* This method uses the params :meal_id and :food_id to create the record
+
+### DELETE '/api/v1/meals/:meal_id/foods/:food_id'
+* Deletes specified meal_food record
+
+
+### GET '/api/v1/goals'
 * Returns an array of all of the default Goal objects
-
+```json
 [
-  {
-    "id": 2,
-    "name": "Lunch",
-    "calories": 700,
-    "created_at": "2019-02-07T00:10:40.207Z",
-    "updated_at": "2019-02-07T00:10:40.207Z"
-  },
-  {
-    "id": 3,
-    "name": "Dinner",
-    "calories": 800,
-    "created_at": "2019-02-07T00:10:40.207Z",
-    "updated_at": "2019-02-07T00:10:40.207Z"
-  },
-  {
-    "id": 4,
-    "name": "Snack",
-    "calories": 100,
-    "created_at": "2019-02-07T00:10:40.207Z",
-    "updated_at": "2019-02-07T00:10:40.207Z"
-  },
-  {
-    "id": 1,
-    "name": "Breakfast",
-    "calories": 100,
-    "created_at": "2019-02-07T00:10:40.207Z",
-    "updated_at": "2019-02-07T00:10:40.207Z"
+  {  
+    "id": 2,  
+    "name": "Lunch",  
+    "calories": 700,  
+    "created_at": "2019-02-07T00:10:40.207Z",  
+    "updated_at": "2019-02-07T00:10:40.207Z"  
+  },  
+  {  
+    "id": 3,  
+    "name": "Dinner",  
+    "calories": 800,  
+    "created_at": "2019-02-07T00:10:40.207Z",  
+    "updated_at": "2019-02-07T00:10:40.207Z"  
+  },  
+  {  
+    "id": 4,  
+    "name": "Snack",  
+    "calories": 100,  
+    "created_at": "2019-02-07T00:10:40.207Z",  
+    "updated_at": "2019-02-07T00:10:40.207Z"  
+  },  
+  {  
+    "id": 1,  
+    "name": "Breakfast",  
+    "calories": 100,  
+    "created_at": "2019-02-07T00:10:40.207Z",  
+    "updated_at": "2019-02-07T00:10:40.207Z"  
   }
-]
+]  
+```
 
-* See routes for the rest of the available CRUD functionality for Meals and Goals
+### PUT '/api/v1/goals/:id'
+ * Create/update specified goal
+ * Request body must be formatted like this:
+```json
+{  
+  "goal": {  
+    "name": "Breakfast",  
+    "calories": 600  
+  }  
+}  
+```
 
 ## Built With
 
