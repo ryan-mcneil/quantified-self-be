@@ -16,7 +16,6 @@ exports.seed = function(knex, Promise) {
                               {name: 'Toast', calories: 100},
                               {name: 'Granola Bar', calories: 275},
                               {name: 'Soup', calories: 300},
-                              {name: 'Liver', calories: 300, active: false},
                               ], 'id')
         .then(() =>
           console.log('Seeding Foods complete!'))
