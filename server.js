@@ -30,45 +30,8 @@ app.listen(app.get('port'), () => {
 // ----------Foods---------
 
 app.use('/api/v1/foods', foods)
-
 app.use('/api/v1/foods/:id', foods)
-// app.get('/api/v1/foods/:id', (request, response) => {
-//   database('foods').where('id', request.params.id).select()
-//     .then((foods) => {
-//       if(foods.length) {
-//         response.status(200).json(foods[0]);
-//       } else {
-//         response.status(404).json({
-//           error: `Could not find food with id ${request.params.id}`
-//         });
-//       }
-//     })
-//     .catch((error) => {
-//       response.status(500).json({ error });
-//     });
-// });
 
-app.post('/api/v1/foods', (request, response) => {
-  const food_data = request.body.food;
-  for (let requiredParameter of ['name', 'calories']) {
-    if (!food_data[requiredParameter]) {
-      return response
-        .status(422)
-        .send({ error: `Expected format: { food: { name: <String>, calories: <Integer> } }. You're missing a "${requiredParameter}" property.` });
-    }
-  }
-
-  database('foods').insert(food_data, 'id')
-    .then(food_id => {
-      database('foods').where({id: food_id[0]}).select()
-        .then(food => {
-          response.status(201).json(food[0]);
-        })
-    })
-    .catch(error => {
-      response.status(500).json({ error });
-    })
-})
 
 app.put('/api/v1/foods/:id', (request, response) => {
   const food_data = request.body.food;
