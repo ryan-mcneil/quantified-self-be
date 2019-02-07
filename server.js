@@ -1,15 +1,11 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+
 const foods = require('./lib/routes/api/v1/foods')
 const meals = require('./lib/routes/api/v1/meals')
 const meal_foods = require('./lib/routes/api/v1/meal_foods')
 const goals = require('./lib/routes/api/v1/goals')
-
-const environment = process.env.NODE_ENV || 'development';
-const configuration = require('./knexfile')[environment];
-const database = require('knex')(configuration);
-const pry = require('pryjs');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
