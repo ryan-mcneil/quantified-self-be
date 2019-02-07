@@ -4,18 +4,19 @@ exports.seed = function(knex, Promise) {
     .then(() => {
       return Promise.all([
 
-        knex('foods').insert([{name: 'Steak', calories: 500},
-                              {name: 'Carrots', calories: 10},
-                              {name: 'Pizza', calories: 777},
-                              {name: 'Yogurt', calories: 50},
-                              {name: 'Sesame Chicken', calories: 600},
-                              {name: 'Eggs', calories: 200},
-                              {name: 'Salad', calories: 100},
-                              {name: 'Beans', calories: 250},
-                              {name: 'Sandwich', calories: 450},
-                              {name: 'Toast', calories: 100},
-                              {name: 'Granola Bar', calories: 275},
-                              {name: 'Soup', calories: 300},
+        knex('foods').insert([{name: 'Steak', calories: 500, active: true},
+                              {name: 'Carrots', calories: 10, active: true},
+                              {name: 'Pizza', calories: 777, active: true},
+                              {name: 'Yogurt', calories: 50, active: true},
+                              {name: 'Sesame Chicken', calories: 600, active: true},
+                              {name: 'Eggs', calories: 200, active: true},
+                              {name: 'Salad', calories: 100, active: true},
+                              {name: 'Beans', calories: 250, active: true},
+                              {name: 'Sandwich', calories: 450, active: true},
+                              {name: 'Toast', calories: 100, active: true},
+                              {name: 'Granola Bar', calories: 275, active: true},
+                              {name: 'Soup', calories: 300, active: true},
+                              {name: 'Liver', calories: 300, active: false},
                               ], 'id')
         .then(() =>
           console.log('Seeding Foods complete!'))

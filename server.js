@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const foods = require('./lib/routes/api/v1/foods')
 
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
@@ -28,32 +29,24 @@ app.listen(app.get('port'), () => {
 
 // ----------Foods---------
 
-app.get('/api/v1/foods', (request, response) => {
-  database('foods').where({active: true}).select()
-    .then((foods) => {
-      // eval(pry.it)
-      response.status(200).json(foods);
-    })
-    .catch((error) => {
-      response.status(500).json({ error });
-    });
-});
+app.use('/api/v1/foods', foods)
 
-app.get('/api/v1/foods/:id', (request, response) => {
-  database('foods').where('id', request.params.id).select()
-    .then((foods) => {
-      if(foods.length) {
-        response.status(200).json(foods[0]);
-      } else {
-        response.status(404).json({
-          error: `Could not find food with id ${request.params.id}`
-        });
-      }
-    })
-    .catch((error) => {
-      response.status(500).json({ error });
-    });
-});
+app.use('/api/v1/foods/:id', foods)
+// app.get('/api/v1/foods/:id', (request, response) => {
+//   database('foods').where('id', request.params.id).select()
+//     .then((foods) => {
+//       if(foods.length) {
+//         response.status(200).json(foods[0]);
+//       } else {
+//         response.status(404).json({
+//           error: `Could not find food with id ${request.params.id}`
+//         });
+//       }
+//     })
+//     .catch((error) => {
+//       response.status(500).json({ error });
+//     });
+// });
 
 app.post('/api/v1/foods', (request, response) => {
   const food_data = request.body.food;
